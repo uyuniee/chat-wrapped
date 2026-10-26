@@ -1,6 +1,6 @@
-// filereader.js — reads a WhatsApp export (.txt or .zip) into text.
+// filereader.js: reads a WhatsApp export (.txt or .zip) into text.
 // Zero dependencies: uses the browser's built-in DecompressionStream.
-// Only the chat .txt inside a zip is read — photos, videos and voice notes are never opened.
+// Only the chat .txt inside a zip is read. Photos, videos and voice notes are never opened.
 
 export const LIMITS = {
   MAX_TXT_BYTES: 50 * 1024 * 1024, // 50 MB of chat text

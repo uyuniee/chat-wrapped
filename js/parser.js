@@ -1,4 +1,4 @@
-// parser.js — turns a WhatsApp export (.txt text) into structured messages.
+// parser.js: turns a WhatsApp export (.txt text) into structured messages.
 // Pure function: no DOM, no network, no storage. Safe to run in a Web Worker or Node.
 
 // Matches the start of a message line in both Android and iOS exports:
@@ -13,7 +13,7 @@ const DELETED_RE =
 
 const EDITED_RE = /\s*<(this message was edited|mesej ini telah disunting)>\s*$/i;
 
-// [pattern, mediaType] — checked in order, first match wins.
+// [pattern, mediaType], checked in order, first match wins.
 const MEDIA_PATTERNS = [
   [/^<media omitted>$/i, 'media'],
   [/^<media tidak disertakan>$/i, 'media'],

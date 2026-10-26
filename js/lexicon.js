@@ -1,4 +1,4 @@
-// lexicon.js — small word lists for the Bahasa Rojak Score and Word of the Year.
+// lexicon.js: small word lists for the Bahasa Rojak Score and Word of the Year.
 // Deliberately tiny and transparent. No topic detection (health, politics, religion) on purpose.
 
 export const MALAY = new Set(`

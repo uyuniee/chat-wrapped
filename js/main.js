@@ -1,4 +1,4 @@
-// main.js — UI only. Receives a stats object from the worker; never sees raw chat text.
+// main.js: UI only. Receives a stats object from the worker; never sees raw chat text.
 // Safety rules followed here:
 //   • No innerHTML anywhere: every piece of text goes in via text nodes (blocks XSS from chat content).
 //   • No localStorage / IndexedDB / cookies: state lives in memory and dies with the tab.
@@ -41,7 +41,7 @@ const fmtDate = (v) =>
 const hourLabel = (h) => `${h % 12 === 0 ? 12 : h % 12} ${h < 12 ? 'AM' : 'PM'}`;
 
 function fmtDuration(ms) {
-  if (ms == null) return '—';
+  if (ms == null) return '-';
   const s = ms / 1000;
   if (s < 60) return `${Math.round(s)} saat`;
   const m = s / 60;
@@ -49,6 +49,30 @@ function fmtDuration(ms) {
   const h = m / 60;
   if (h < 24) return `${Math.floor(h)}j ${Math.round(m % 60)}m`;
   return `${Math.round(h / 24)} hari`;
+}
+
+const HARI = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+const timeLabel = (ts) => {
+  const t = new Date(ts);
+  return `${t.getHours() % 12 || 12}:${String(t.getMinutes()).padStart(2, '0')} ${t.getHours() < 12 ? 'AM' : 'PM'}`;
+};
+
+function vibeCopy(v) {
+  switch (v.id) {
+    case 'birthday': return { emoji: '🎂', title: 'Ada yang birthday!', desc: `${fmt(v.n)} mesej wish dan ucapan. Comel sangat.` };
+    case 'festive': return { emoji: '🎆', title: 'Hari perayaan', desc: 'Ucapan sana sini, semua happy.' };
+    case 'congrats': return { emoji: '🎉', title: 'Ada good news', desc: 'Banyak tahniah dan congrats bertebaran.' };
+    case 'plans': return { emoji: '🚗', title: 'Plan nak jumpa', desc: 'Banyak "jom", "otw" dan "dah sampai" hari tu.' };
+    case 'laugh': return { emoji: '😂', title: 'Hari paling banyak gelak', desc: `${fmt(v.n)} mesej gelak dalam sehari.` };
+    case 'latenight': return { emoji: '🌙', title: 'Deep talk sampai lewat malam', desc: 'Banyak chat lepas pukul 10 malam.' };
+    case 'photos': return { emoji: '📸', title: 'Hari spam gambar', desc: `${fmt(v.n)} gambar, video dan sticker.` };
+    case 'voice': return { emoji: '🎙️', title: 'Voice note marathon', desc: `${fmt(v.n)} voice note dalam sehari.` };
+    case 'hearts': return { emoji: '🥰', title: 'Penuh dengan hati', desc: `${fmt(v.n)} mesej ada emoji hati. Sweet!` };
+    case 'kind': return { emoji: '🥺', title: 'Sopan santun mode', desc: 'Banyak thank you dan sorry. Baik hati betul.' };
+    case 'bigtalk': return { emoji: '📜', title: 'Cerita panjang-panjang', desc: 'Mesej hari tu lagi panjang dari biasa.' };
+    case 'speedy': return { emoji: '⚡', title: 'Reply laju gila', desc: `Biasa reply dalam ${fmtDuration(v.n)}. Tak sabar nak cerita!` };
+    default: return { emoji: '✨', title: 'Banyak benda nak cerita', desc: 'Takde sebab khas pun. Memang seronok bersembang je kot.' };
+  }
 }
 
 const AVATARS = ['🦊', '🐼', '🐸', '🐙', '🦄', '🐯', '🐨', '🐧', '🐝', '🦖', '🐳', '🦋'];
@@ -65,7 +89,7 @@ function makeNamer(stats, anonymize) {
     const letter = i < 26 ? String.fromCharCode(65 + i) : `#${i + 1}`;
     map.set(p.name, anonymize ? `${AVATARS[i % AVATARS.length]} Person ${letter}` : maskPhone(p.name));
   });
-  return (name) => (name == null ? '—' : map.get(name) || maskPhone(name));
+  return (name) => (name == null ? '-' : map.get(name) || maskPhone(name));
 }
 
 function countUp(node, to, duration = 1300) {
@@ -96,7 +120,7 @@ function renderLanding(error) {
   const updateNet = () => {
     const off = !navigator.onLine;
     netBadge.className = `net${off ? ' offline' : ''}`;
-    netBadge.textContent = off ? '✓ Offline — paling selamat' : '● Online — tip: offkan WiFi dulu';
+    netBadge.textContent = off ? '✓ Offline, paling selamat' : '● Online. Tip: offkan WiFi dulu';
   };
   updateNet();
   window.ononline = updateNet; // assignment (not addEventListener) so re-renders don't stack listeners
@@ -130,7 +154,7 @@ function renderLanding(error) {
       el('div', { class: 'topbar' }, el('div', { class: 'logo' }, 'chat ', el('span', {}, 'wrapped')), netBadge),
       el('div', { class: 'hero' },
         el('h1', {}, 'Your chat, ', el('em', {}, 'wrapped.')),
-        el('p', {}, 'Spotify Wrapped, tapi untuk WhatsApp. Semua diproses dalam browser ni — chat you tak pernah keluar dari device.'),
+        el('p', {}, 'Macam Spotify Wrapped, tapi untuk chat WhatsApp you. Semua dikira dalam browser ni je, chat you tak pernah keluar dari phone atau laptop.'),
       ),
       drop,
       error ? el('div', { class: 'error', role: 'alert' }, '⚠️ ', error) : null,
@@ -143,7 +167,7 @@ function renderLanding(error) {
         promise('🔓', 'Open source', 'Semua code boleh audit kat GitHub.'),
       ),
       el('details', { class: 'howto' },
-        el('summary', {}, '🤖 Cara export — Android'),
+        el('summary', {}, '🤖 Cara export (Android)'),
         el('ol', {},
           el('li', {}, 'Buka chat → tekan ⋮ (atas kanan)'),
           el('li', {}, 'More → Export chat'),
@@ -152,7 +176,7 @@ function renderLanding(error) {
         ),
       ),
       el('details', { class: 'howto' },
-        el('summary', {}, '🍎 Cara export — iPhone'),
+        el('summary', {}, '🍎 Cara export (iPhone)'),
         el('ol', {},
           el('li', {}, 'Buka chat → tekan nama orang/group kat atas'),
           el('li', {}, 'Scroll bawah → Export Chat'),
@@ -161,7 +185,7 @@ function renderLanding(error) {
         ),
       ),
       el('p', { class: 'fineprint' },
-        'Chat ni ada mesej orang lain juga — share hasil dengan bertanggungjawab. ',
+        'Chat ni ada mesej orang lain juga, so share elok-elok ya. ',
         'Projek fun, tidak berkaitan dengan WhatsApp atau Meta. ',
         'Statistik dikira secara automatik dan mungkin tak 100% tepat.'),
     ),
@@ -191,7 +215,7 @@ function start(file) {
     if (msg.type === 'progress') label.textContent = STEPS[msg.step] || 'Sekejap…';
     if (msg.type === 'error') { worker.terminate(); state.worker = null; renderLanding(msg.message); }
     if (msg.type === 'done') {
-      worker.terminate(); // kill the worker — its memory (raw text) is released
+      worker.terminate(); // kill the worker so its memory (raw text) is released
       state.worker = null;
       state.stats = msg.stats;
       openStory();
@@ -252,21 +276,52 @@ function buildCards(s, nm) {
         t.byHour.map((c, h) => el('span', { class: h === t.peakHour ? 'peak' : '', style: { height: `${Math.max(3, (c / max) * 100)}%`, '--d': `${0.5 + h * 0.03}s` } }))),
       el('div', { class: 'hours-axis' }, el('span', {}, '12AM'), el('span', {}, '6AM'), el('span', {}, '12PM'), el('span', {}, '6PM'), el('span', {}, '11PM')),
       el('p', { class: 'sub reveal', style: d(1.2) },
-        `${pct(t.nightShare)} mesej dihantar antara 12AM–5AM.`,
+        `${pct(t.nightShare)} mesej dihantar antara 12AM sampai 5AM.`,
         s.awards.nightOwl && t.nightShare > 0.02 ? ` Burung hantu utama: ${nm(s.awards.nightOwl)}.` : ''),
     ];
   });
 
-  // 3. Busiest day
-  add('t-orange', () => {
-    const b = s.time.busiest;
+  // 3. Busiest day, part 1: the numbers
+  const bd = s.bigDay;
+  if (bd) add('t-orange', () => {
     const avg = s.totals.messages / Math.max(1, s.totals.activeDays);
+    const max = Math.max(...bd.byHour);
+    const n = el('div', { class: 'huge pop', style: d(0.3) }, '0');
+    countUp(n, bd.count, 1100);
     return [
-      el('div', { class: 'eyebrow reveal' }, 'The day it all went down'),
-      el('div', { class: 'big pop', style: d(0.2) }, fmtDate(b.day)),
-      el('h2', { class: 'title reveal', style: d(0.5) }, `${fmt(b.count)} mesej dalam satu hari.`),
-      el('p', { class: 'sub reveal', style: d(0.8) },
-        `Hari biasa purata ${fmt(avg)}. Hari tu ${(b.count / avg).toFixed(1)}× ganda. Apa jadi?? 👀`),
+      el('div', { class: 'eyebrow reveal' }, 'The day it all went down 💥'),
+      el('div', { class: 'big reveal', style: d(0.1) }, `${HARI[bd.weekday]}, ${fmtDate(bd.day)}`),
+      n,
+      el('h2', { class: 'title reveal', style: d(0.5) }, 'mesej dalam satu hari!'),
+      el('p', { class: 'sub reveal', style: d(0.7) },
+        `Biasanya cuma ${fmt(avg)} sehari. Hari ni ${(bd.count / avg).toFixed(1)}x ganda 🤯`),
+      el('div', { class: 'hours small', 'aria-hidden': 'true' },
+        bd.byHour.map((c, h) => el('span', { class: h === bd.peakHour ? 'peak' : '', style: { height: `${Math.max(3, (c / max) * 100)}%`, '--d': `${0.8 + h * 0.03}s` } }))),
+      el('div', { class: 'hours-axis' }, el('span', {}, '12AM'), el('span', {}, '6AM'), el('span', {}, '12PM'), el('span', {}, '6PM'), el('span', {}, '11PM')),
+      el('p', { class: 'sub reveal', style: d(1.4) },
+        `Mesej pertama ${timeLabel(bd.firstTs)}, last ${timeLabel(bd.lastTs)}. Paling rancak pukul ${hourLabel(bd.peakHour)}.`),
+    ];
+  });
+
+  // 3b. Busiest day, part 2: what probably happened (always cute and positive)
+  if (bd) add('t-pink', () => {
+    const top = bd.people.slice(0, 4);
+    const most = top[0];
+    return [
+      el('div', { class: 'eyebrow reveal' }, 'Apa jadi hari tu? 👀'),
+      el('h2', { class: 'title reveal', style: d(0.1) }, 'Teori kami:'),
+      el('div', { class: 'vibes' }, bd.vibes.map((v, i) => {
+        const c = vibeCopy(v);
+        return el('div', { class: 'vibe reveal', style: d(0.3 + i * 0.2) },
+          el('span', { class: 've' }, c.emoji),
+          el('div', {}, el('b', {}, c.title), el('small', {}, c.desc)));
+      })),
+      el('div', { class: 'duo-grid' },
+        tile('Paling banyak cakap 🗣️', nm(most.name), `${fmt(most.n)} mesej hari tu${top.length > 1 ? ` (${pct(most.n / bd.count)})` : ''}`, false, 0.9),
+        bd.topEmoji.length
+          ? tile('Emoji hari tu', bd.topEmoji.map((e) => e.key).join(' '), `${fmt(bd.topEmoji[0].n)}x ${bd.topEmoji[0].key}`, false, 1.05)
+          : tile('Rekod berturut 📲', `${bd.maxBurst} mesej`, 'tanpa tunggu reply', false, 1.05)),
+      el('p', { class: 'sub tiny reveal', style: d(1.3) }, '🔒 Kami tak baca mesej korang. Teori ni dikira dari emoji, masa dan kata kunci je.'),
     ];
   });
 
@@ -425,7 +480,7 @@ function buildCards(s, nm) {
       el('button', { class: 'btn', 'data-action': 'share' }, '⬇️ Download share card'),
       el('button', { class: 'btn ghost', 'data-action': 'replay' }, '↺ Replay'),
       el('button', { class: 'btn danger', 'data-action': 'exit' }, '🧹 Clear & Exit')),
-    el('p', { class: 'sub reveal', style: { '--d': '1.2s', 'font-size': '13px' } }, 'Share card takde nama sesiapa — selamat untuk post.'),
+    el('p', { class: 'sub reveal', style: { '--d': '1.2s', 'font-size': '13px' } }, 'Share card ni takde nama sesiapa, so selamat nak post.'),
   ]);
 
   return cards;
@@ -478,7 +533,7 @@ function renderStory() {
       const keep = state.index;
       state.cards = buildCards(state.stats, makeNamer(state.stats, state.anonymize));
       state.index = keep;
-      toast(state.anonymize ? 'Nama disorokkan 🙈' : 'Nama ditunjuk 👀 — hati-hati bila screenshot');
+      toast(state.anonymize ? 'Nama disorokkan 🙈' : 'Nama ditunjuk 👀 Hati-hati bila screenshot');
       return renderStory();
     }
     if (e.target.closest('button, a')) return;

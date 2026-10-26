@@ -1,8 +1,9 @@
-// stats.js — computes every Wrapped insight in a single pass.
+// stats.js: computes every Wrapped insight in a single pass.
 // Output is a plain object of numbers, names and short labels.
 // It NEVER contains full message text, so nothing sensitive leaves this function.
 
 import { MALAY, ENGLISH, STOPWORDS, LAUGH_STYLES, SORRY_RE, THANKS_RE } from './lexicon.js';
+import { computeBigDay } from './daystory.js';
 
 const HOUR = 3600e3;
 const DAY = 24 * HOUR;
@@ -296,5 +297,6 @@ export function computeStats(parsed, { convoGapHours = 6 } = {}) {
     topEmoji: topN(emojiFreq, 5),
     topWords: topN(wordFreq, 5),
     persona,
+    bigDay: computeBigDay(msgs, busiest.day, { avgWordsOverall: textMsgsTotal ? totalWords / textMsgsTotal : 0 }),
   };
 }

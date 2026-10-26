@@ -1,4 +1,4 @@
-// worker.js — runs all heavy work off the main thread so the UI never freezes.
+// worker.js: runs all heavy work off the main thread so the UI never freezes.
 // Receives a File, returns ONLY the stats object. Raw chat text never goes back to the page.
 
 import { readChatFile } from './filereader.js';

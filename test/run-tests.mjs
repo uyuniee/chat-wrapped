@@ -76,6 +76,16 @@ for (const f of ['sample_duo_android.txt', 'sample_group_ios.txt']) {
   });
 }
 
+await test('big day: finds the day, detects a happy vibe, leaks no text', () => {
+  const lines = ['25/10/2026, 10:00 - Aina: hi', '25/10/2026, 10:05 - Haziq: hello'];
+  for (let i = 0; i < 20; i++) lines.push(`26/10/2026, 12:${String(i).padStart(2, '0')} - ${i % 2 ? 'Aina' : 'Haziq'}: happy birthday rahsia${i} 🎂`);
+  const s = computeStats(parseChat(lines.join('\n')));
+  assert.equal(s.bigDay.day, '2026-10-26');
+  assert.equal(s.bigDay.count, 20);
+  assert.ok(s.bigDay.vibes.some((v) => v.id === 'birthday'));
+  assert.ok(!JSON.stringify(s.bigDay).includes('rahsia'));
+});
+
 console.log('File reader');
 await test('reads _chat.txt from a zip and ignores media', async () => {
   const tmp = join(root, 'test', '.tmpzip');

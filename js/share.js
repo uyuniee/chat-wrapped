@@ -1,5 +1,5 @@
-// share.js — draws the shareable 1080×1920 PNG on a canvas.
-// Safety: contains NO names and NO message text — only aggregate numbers, emoji and the persona.
+// share.js: draws the shareable 1080×1920 PNG on a canvas.
+// Safety: contains NO names and NO message text, only aggregate numbers, emoji and the persona.
 
 const W = 1080;
 const H = 1920;
@@ -69,8 +69,8 @@ export function renderShareCard(stats, persona) {
     ['Mesej', stats.totals.messages.toLocaleString('en-MY')],
     ['Peak hour', hourLabel(stats.time.peakHour)],
     ['Longest streak', `${stats.time.streak.days} hari`],
-    ['Top emoji', stats.topEmoji.slice(0, 3).map((e) => e.key).join(' ') || '—'],
-    ['Laugh style', stats.laugh[0]?.label || '—'],
+    ['Top emoji', stats.topEmoji.slice(0, 3).map((e) => e.key).join(' ') || '-'],
+    ['Laugh style', stats.laugh[0]?.label || '-'],
     ['Bahasa rojak', `${Math.round(stats.language.rojakShare * 100)}%`],
   ];
   if (stats.compatibility != null) rows.push(['Compatibility', `${stats.compatibility}%`]);

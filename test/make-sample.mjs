@@ -23,6 +23,7 @@ const LONG = [
   'okay so basically tadi kat kafe tu orang beratur panjang gila then dia tutup awal pulak, so kita kena cari tempat lain and end up makan roti canai je',
   'i honestly think we should just plan everything awal-awal sebab last time kita last minute and semua jadi kelam kabut',
 ];
+const BDAY = ['HAPPY BIRTHDAY!!! 🎂🥳', 'hbd sayang kawan 🥰', 'selamat hari jadi 🎉❤️', 'thank you semua!! 🥹❤️', 'jom celebrate malam ni', 'otw kedai kek'];
 const MEDIA_ANDROID = ['<Media omitted>', 'PTT-20260101-WA0001.opus (file attached)', 'STK-20260101-WA0002.webp (file attached)'];
 const MEDIA_IOS = ['image omitted', 'audio omitted', 'sticker omitted', 'video omitted'];
 
@@ -56,7 +57,7 @@ function gen({ people, start, days, perDay, ios }) {
       if (r < 0.08) body = pickOne(ios ? MEDIA_IOS : MEDIA_ANDROID);
       else if (r < 0.1) body = ios ? 'This message was deleted.' : 'This message was deleted';
       else if (r < 0.13) body = pickOne(LONG);
-      else body = pickOne(LINES);
+      else body = day === 120 && rand() < 0.45 ? pickOne(BDAY) : pickOne(LINES);
       if (rand() < 0.02) body += ' <This message was edited>';
       if (rand() < 0.03) body += '\nline kedua mesej panjang';
       out.push(stamp + `${who}: ${body}`);

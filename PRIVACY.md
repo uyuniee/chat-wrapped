@@ -24,8 +24,8 @@ Chat Wrapped handles some of the most personal data people have. These are the r
 | 14 | Anonymize ON by default (🦊 Person A…) | ✅ | `makeNamer()` |
 | 15 | Phone-number senders always masked (`+60 •••• 89`) | ✅ | `maskPhone()` |
 | 16 | No detection of sensitive topics (health, politics, religion, relationships) | ✅ | by design |
-| — | Participant names never shown as "Word of the Year" | ✅ | `stats.js` |
-| — | Share image contains no names and no message text | ✅ | `share.js` |
+| + | Participant names never shown as "Word of the Year" | ✅ | `stats.js` |
+| + | Share image contains no names and no message text | ✅ | `share.js` |
 | **E. Transparency** ||||
 | 17 | Clear privacy promise on the landing page | ✅ | `renderLanding()` |
 | 18 | Open source | ⏳ | push to GitHub |

@@ -1,6 +1,6 @@
 # 🎁 Chat Wrapped
 
-Spotify-Wrapped-style stats for your WhatsApp chats — **100% on-device**. Your chat never leaves your browser.
+Spotify-Wrapped-style stats for your WhatsApp chats, **100% on-device**. Your chat never leaves your browser.
 
 Upload a WhatsApp export (`.txt` or `.zip`) and get a story of animated cards: peak hour, busiest day, longest streak, who starts and who kills conversations, reply speed, laugh fingerprint, Bahasa Rojak Score, top emoji, word of the year, special awards, duo compatibility or group leaderboard, and a final chat persona with a shareable PNG (no names on it).
 
