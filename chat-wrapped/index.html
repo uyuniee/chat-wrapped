@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!--
+    Safety: this policy is the technical proof of "your chat never leaves your device".
+    connect-src 'none' → the page cannot send ANY network request (fetch, XHR, WebSocket, beacon).
+    Only our own files can load. No CDN, no fonts, no analytics.
+  -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self'; worker-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'none'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="theme-color" content="#120a24" />
+  <title>Chat Wrapped</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%81%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <noscript>Chat Wrapped perlukan JavaScript. Semua proses berlaku dalam browser you sahaja.</noscript>
+  <main id="app" aria-live="polite"></main>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

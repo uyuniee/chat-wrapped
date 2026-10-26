@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+test/.tmpzip/
+# never commit real chats
+*.zip
+WhatsApp Chat*
+_chat.txt

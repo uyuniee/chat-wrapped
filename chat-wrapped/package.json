@@ -1,0 +1,14 @@
+{
+  "name": "chat-wrapped",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Spotify-Wrapped-style stats for WhatsApp chat exports. 100% on-device.",
+  "scripts": {
+    "sample": "node test/make-sample.mjs",
+    "test": "node test/run-tests.mjs",
+    "start": "python3 -m http.server 8080"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
